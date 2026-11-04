@@ -1,4 +1,5 @@
 import { Client } from '@stomp/stompjs';
+import { WS_URL } from './config';
 
 export interface ChatMessage {
   sender: string;
@@ -14,7 +15,7 @@ export const createStompClient = (
 ): Client => {
   const client = new Client({
     // Use native WebSocket — no sockjs-client needed
-    brokerURL: 'ws://localhost:8081/ws',
+    brokerURL: WS_URL,
     reconnectDelay: 5000,
     onConnect: () => {
       client.subscribe(`/topic/classroom/${roomId}`, (frame) => {

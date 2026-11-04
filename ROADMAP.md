@@ -14,7 +14,7 @@
 
 ## Architecture & Refactoring
 - [ ] Extract a shared `apiFetch` helper (base URL, auth header, error handling) from `api/*.ts`
-- [ ] Move API base URLs to `import.meta.env` instead of hardcoded `localhost:8081`
+- [x] Move API base URLs to `import.meta.env` instead of hardcoded `localhost:8081`
 - [ ] Extract a `useCourses` hook from `Courses.tsx`
 
 ## Performance & Polish

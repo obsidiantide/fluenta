@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8081/api';
+import { API_BASE_URL as BASE_URL } from './config';
 
 const authHeaders = () => ({
   'Content-Type': 'application/json',
