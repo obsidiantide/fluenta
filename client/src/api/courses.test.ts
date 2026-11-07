@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createCourse, getCourses } from './courses';
+import { createCourse, getCourses, getLessonsByCourse } from './courses';
 
 beforeEach(() => {
   vi.stubGlobal('localStorage', { getItem: (k: string) => (k === 'token' ? 'jwt-123' : null) });
@@ -35,5 +35,18 @@ describe('courses api', () => {
     const init = fetchMock.mock.calls[0][1];
     expect(init.method).toBe('POST');
     expect(JSON.parse(init.body)).toEqual(payload);
+  });
+
+  it('getLessonsByCourse returns only the course lessons ordered by index', async () => {
+    const lessons = [
+      { id: 1, title: 'B', content: '', orderIndex: 2, course: { id: 7 } },
+      { id: 2, title: 'X', content: '', orderIndex: 1, course: { id: 8 } },
+      { id: 3, title: 'A', content: '', orderIndex: 1, course: { id: 7 } },
+    ];
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => lessons }));
+
+    const result = await getLessonsByCourse(7);
+
+    expect(result.map((l) => l.id)).toEqual([3, 1]);
   });
 });

@@ -19,6 +19,7 @@ export interface Lesson {
   content: string;
   orderIndex: number;
   materialsUrl?: string;
+  course?: { id: number };
 }
 
 export interface Enrollment {
@@ -40,11 +41,13 @@ export const getCourseById = async (id: number): Promise<Course> => {
   return res.json();
 };
 
-export const getLessonsByCourse = async (_courseId: number): Promise<Lesson[]> => {
+export const getLessonsByCourse = async (courseId: number): Promise<Lesson[]> => {
   const res = await fetch(`${BASE_URL}/lessons`, { headers: authHeaders() });
   if (!res.ok) throw new Error('Failed to fetch lessons');
   const all: Lesson[] = await res.json();
-  return all;
+  return all
+    .filter((lesson) => lesson.course?.id === courseId)
+    .sort((a, b) => a.orderIndex - b.orderIndex);
 };
 
 export const getEnrollments = async (): Promise<Enrollment[]> => {
