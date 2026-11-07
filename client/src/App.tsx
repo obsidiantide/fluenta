@@ -1,15 +1,17 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Courses from './pages/Courses';
-import CourseDetail from './pages/CourseDetail';
-import Classroom from './pages/Classroom';
-import Profile from './pages/Profile';
 import './index.css';
+
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Courses = lazy(() => import('./pages/Courses'));
+const CourseDetail = lazy(() => import('./pages/CourseDetail'));
+const Classroom = lazy(() => import('./pages/Classroom'));
+const Profile = lazy(() => import('./pages/Profile'));
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
         <div className="app-container">
           <Navbar />
           <main className="main-content">
+            <Suspense fallback={<div className="loading-spinner">Loading…</div>}>
             <Routes>
               <Route path="/" element={
                 <div className="hero-landing">
@@ -42,6 +45,7 @@ function App() {
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             </Routes>
+            </Suspense>
           </main>
         </div>
       </Router>

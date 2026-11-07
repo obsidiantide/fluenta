@@ -19,6 +19,6 @@
 - [ ] Extract a `useCourses` hook from `Courses.tsx`
 
 ## Performance & Polish
-- [ ] Lazy-load route pages with `React.lazy`
+- [x] Lazy-load route pages with `React.lazy`
 - [ ] Responsive layout for Navbar on small screens
 - [ ] Loading and error states on Dashboard and Courses
