@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 
 interface User {
@@ -16,17 +16,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+const readStoredUser = (): User | null => {
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+  const email = localStorage.getItem('email');
+  return token && role && email ? { token, role, email } : null;
+};
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    const email = localStorage.getItem('email');
-    if (token && role && email) {
-      setUser({ token, role, email });
-    }
-  }, []);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  // Read synchronously so ProtectedRoute does not redirect before the session is restored.
+  const [user, setUser] = useState<User | null>(readStoredUser);
 
   const login = (token: string, role: string, email: string) => {
     localStorage.setItem('token', token);
