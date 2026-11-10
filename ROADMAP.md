@@ -9,8 +9,8 @@
 
 ## Test Coverage
 - [x] Vitest setup and tests for `api/auth` and `api/courses`
-- [ ] Tests for `AuthContext` (login/logout, localStorage restore)
-- [ ] Tests for `ProtectedRoute`
+- [x] Tests for `AuthContext` (login/logout, localStorage restore)
+- [x] Tests for `ProtectedRoute`
 - [ ] Controller tests for `LessonController` and `EnrollmentController`
 
 ## Architecture & Refactoring
