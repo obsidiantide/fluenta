@@ -3,7 +3,7 @@
 ## Core Features
 - [x] Filter lessons by course on the client (`getLessonsByCourse` filters by `lesson.course.id`)
 - [ ] Add server-side `GET /api/lessons?courseId=` to stop sending every lesson
-- [ ] Course search and level filter on the Courses page
+- [x] Course search and level filter on the Courses page
 - [ ] Enrollment progress update from the lesson view
 - [ ] Message history for classroom chat rooms
 

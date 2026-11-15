@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getCourses, createCourse } from '../api/courses';
 import type { Course } from '../api/courses';
 import { useAuth } from '../context/AuthContext';
+import { ALL_LEVELS, filterCourses } from '../utils/courseFilter';
 
 const levelColors: Record<string, string> = {
   beginner: '#10b981',
@@ -16,6 +17,7 @@ const Courses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [levelFilter, setLevelFilter] = useState(ALL_LEVELS);
   const [showModal, setShowModal] = useState(false);
   const [creating, setCreating] = useState(false);
   const [formError, setFormError] = useState('');
@@ -31,10 +33,7 @@ const Courses = () => {
 
   useEffect(() => { fetchCourses(); }, []);
 
-  const filtered = courses.filter(c =>
-    c.title.toLowerCase().includes(search.toLowerCase()) ||
-    (c.description || '').toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = filterCourses(courses, search, levelFilter);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,6 +77,20 @@ const Courses = () => {
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
+      </div>
+
+      <div className="level-selector" role="group" aria-label="Filter by level">
+        {[ALL_LEVELS, ...LEVELS].map(lvl => (
+          <button
+            key={lvl}
+            type="button"
+            className={`role-btn ${levelFilter === lvl ? 'active' : ''}`}
+            aria-pressed={levelFilter === lvl}
+            onClick={() => setLevelFilter(lvl)}
+          >
+            {lvl === ALL_LEVELS ? 'All' : lvl}
+          </button>
+        ))}
       </div>
 
       {loading ? (
