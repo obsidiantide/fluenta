@@ -14,7 +14,8 @@
 - [ ] Controller tests for `LessonController` and `EnrollmentController`
 
 ## Architecture & Refactoring
-- [ ] Extract a shared `apiFetch` helper (base URL, auth header, error handling) from `api/*.ts`
+- [x] Extract a shared `apiFetch` helper (`api/http.ts`); `courses.ts` migrated
+- [ ] Migrate remaining authenticated calls to `apiFetch`
 - [x] Move API base URLs to `import.meta.env` instead of hardcoded `localhost:8081`
 - [ ] Extract a `useCourses` hook from `Courses.tsx`
 

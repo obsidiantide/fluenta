@@ -1,9 +1,4 @@
-import { API_BASE_URL as BASE_URL } from './config';
-
-const authHeaders = () => ({
-  'Content-Type': 'application/json',
-  Authorization: `Bearer ${localStorage.getItem('token')}`,
-});
+import { apiFetch } from './http';
 
 export interface Course {
   id: number;
@@ -29,42 +24,26 @@ export interface Enrollment {
   progress: number;
 }
 
-export const getCourses = async (): Promise<Course[]> => {
-  const res = await fetch(`${BASE_URL}/courses`, { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to fetch courses');
-  return res.json();
-};
+export const getCourses = (): Promise<Course[]> =>
+  apiFetch('/courses', { errorMessage: 'Failed to fetch courses' });
 
-export const getCourseById = async (id: number): Promise<Course> => {
-  const res = await fetch(`${BASE_URL}/courses/${id}`, { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to fetch course');
-  return res.json();
-};
+export const getCourseById = (id: number): Promise<Course> =>
+  apiFetch(`/courses/${id}`, { errorMessage: 'Failed to fetch course' });
 
 export const getLessonsByCourse = async (courseId: number): Promise<Lesson[]> => {
-  const res = await fetch(`${BASE_URL}/lessons`, { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to fetch lessons');
-  const all: Lesson[] = await res.json();
+  const all = await apiFetch<Lesson[]>('/lessons', { errorMessage: 'Failed to fetch lessons' });
   return all
     .filter((lesson) => lesson.course?.id === courseId)
     .sort((a, b) => a.orderIndex - b.orderIndex);
 };
 
-export const getEnrollments = async (): Promise<Enrollment[]> => {
-  const res = await fetch(`${BASE_URL}/enrollments`, { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to fetch enrollments');
-  return res.json();
-};
+export const getEnrollments = (): Promise<Enrollment[]> =>
+  apiFetch('/enrollments', { errorMessage: 'Failed to fetch enrollments' });
 
-export const createCourse = async (data: { title: string; description: string; level: string }): Promise<Course> => {
-  const res = await fetch(`${BASE_URL}/courses`, {
+export const createCourse = (data: { title: string; description: string; level: string }): Promise<Course> =>
+  apiFetch('/courses', {
     method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify(data),
+    body: data,
+    errorMessage: 'Failed to create course',
+    useServerError: true,
   });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err || 'Failed to create course');
-  }
-  return res.json();
-};
