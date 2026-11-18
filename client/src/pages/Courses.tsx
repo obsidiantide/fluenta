@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getCourses, createCourse } from '../api/courses';
-import type { Course } from '../api/courses';
+import { createCourse } from '../api/courses';
+import { useCourses } from '../hooks/useCourses';
 import { useAuth } from '../context/AuthContext';
 import { ALL_LEVELS, filterCourses } from '../utils/courseFilter';
 
@@ -14,8 +14,7 @@ const levelColors: Record<string, string> = {
 const LEVELS = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
 
 const Courses = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { courses, loading, error: loadError, refetch } = useCourses();
   const [search, setSearch] = useState('');
   const [levelFilter, setLevelFilter] = useState(ALL_LEVELS);
   const [showModal, setShowModal] = useState(false);
@@ -23,15 +22,6 @@ const Courses = () => {
   const [formError, setFormError] = useState('');
   const [form, setForm] = useState({ title: '', description: '', level: 'BEGINNER' });
   const { user } = useAuth();
-
-  const fetchCourses = () => {
-    getCourses()
-      .then(setCourses)
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  };
-
-  useEffect(() => { fetchCourses(); }, []);
 
   const filtered = filterCourses(courses, search, levelFilter);
 
@@ -44,7 +34,7 @@ const Courses = () => {
       await createCourse(form);
       setShowModal(false);
       setForm({ title: '', description: '', level: 'BEGINNER' });
-      fetchCourses(); // Refresh list
+      await refetch();
     } catch (err: unknown) {
       setFormError(err instanceof Error ? err.message : 'Failed to create course.');
     } finally {
@@ -93,7 +83,9 @@ const Courses = () => {
         ))}
       </div>
 
-      {loading ? (
+      {loadError ? (
+        <div className="error-message">{loadError}</div>
+      ) : loading ? (
         <div className="loading-spinner">Loading courses...</div>
       ) : filtered.length === 0 ? (
         <div className="glass-panel empty-state">
