@@ -12,6 +12,7 @@
 - [x] Tests for `AuthContext` (login/logout, localStorage restore)
 - [x] Tests for `ProtectedRoute`
 - [ ] Controller tests for `LessonController` and `EnrollmentController`
+- [x] Tests for the classroom STOMP client (`api/classroom.ts`)
 
 ## Architecture & Refactoring
 - [x] Extract a shared `apiFetch` helper (`api/http.ts`); `courses.ts` migrated
