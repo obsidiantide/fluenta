@@ -1,29 +1,10 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getCourses, getEnrollments } from '../api/courses';
-import type { Course, Enrollment } from '../api/courses';
+import { useDashboardData } from '../hooks/useDashboardData';
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [c, e] = await Promise.all([getCourses(), getEnrollments()]);
-        setCourses(c);
-        setEnrollments(e);
-      } catch {
-        // silently ignore
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const { courses, enrollments, loading, error, reload } = useDashboardData();
 
   const isTeacher = user?.role === 'TEACHER';
   const greeting = isTeacher ? 'Welcome, Teacher! 👨‍🏫' : 'Welcome back! 🎒';
@@ -73,6 +54,11 @@ const Dashboard = () => {
 
       {loading ? (
         <div className="loading-spinner">Loading...</div>
+      ) : error ? (
+        <div className="error-message">
+          {error}{' '}
+          <button type="button" className="btn-primary" onClick={() => void reload()}>Retry</button>
+        </div>
       ) : courses.length === 0 ? (
         <div className="glass-panel empty-state">
           <p>No courses available yet.</p>
