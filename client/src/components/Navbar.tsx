@@ -1,11 +1,15 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
 
   const handleLogout = () => {
+    close();
     logout();
     navigate('/');
   };
@@ -15,7 +19,17 @@ const Navbar = () => {
       <div className="nav-brand">
         <Link to="/" className="gradient-text">Fluenta</Link>
       </div>
-      <div className="nav-links">
+      <button
+        type="button"
+        className="nav-toggle"
+        aria-label="Toggle navigation"
+        aria-expanded={open}
+        aria-controls="nav-links"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {open ? '✕' : '☰'}
+      </button>
+      <div id="nav-links" className={`nav-links${open ? ' open' : ''}`} onClick={close}>
         {isAuthenticated ? (
           <>
             <Link to="/dashboard" className="nav-link">Dashboard</Link>

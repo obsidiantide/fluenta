@@ -22,5 +22,5 @@
 
 ## Performance & Polish
 - [x] Lazy-load route pages with `React.lazy`
-- [ ] Responsive layout for Navbar on small screens
+- [x] Responsive layout for Navbar on small screens (collapsible menu under 640px)
 - [x] Loading and error states on Dashboard and Courses (`useDashboardData`)
